@@ -1,0 +1,47 @@
+{
+  "name": "petrov-weather-cli",
+  "version": "1.0.1",
+  "description": "CLI for getting weather forecast",
+  "main": "weather.js",
+  "bin": {
+    "weather": "weather.js"
+  },
+  "type": "module",
+  "man": [
+    "./README.md"
+  ],
+  "funding": "",
+  "engines": {
+    "node": ">14"
+  },
+  "os": [
+    "!win32"
+  ],
+  "scripts": {
+    "start": "node weather.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "weather"
+  ],
+  "author": "Aleksandr Petrov",
+  "license": "ISC",
+  "homepage": "https://sweatclub.ru",
+  "repository": {
+    "type": "git",
+    "url": "https://sweatclub.ru"
+  },
+  "bugs": {
+    "url": "https://sweatclub.ru",
+    "email": "sashafem@mail.ru"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "chalk": "^5.3.0",
+    "dedent-js": "^1.0.1"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}
