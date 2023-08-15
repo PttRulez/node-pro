@@ -5,7 +5,6 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { json } from 'body-parser';
 import { IConfigService } from './config/config.service.interface';
-import { IUserController } from './users/users.controller.interface';
 import { IExceptionFilter } from './errors/exception.filter.interface';
 import { UserController } from './users/users.controller';
 import { PrismaService } from './database/prisma.service';
