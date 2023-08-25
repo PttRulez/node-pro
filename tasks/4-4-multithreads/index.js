@@ -1,6 +1,7 @@
 const { PerformanceObserver } = require('perf_hooks');
 const calc = require('./calc.js');
 const {Worker} = require('worker_threads');
+const {cpus} = require('os')
 
 const arr = [];
 
@@ -8,7 +9,6 @@ const performanceObserver = new PerformanceObserver((items, observer) => {
 	for (const entry of items.getEntries()) {
 		console.log(`${entry.name}: ${entry.duration}`);
 	}
-	// observer.disconnect();
 });
 
 performanceObserver.observe({ entryTypes: ['measure']});
@@ -47,8 +47,7 @@ function workerCalculation (array) {
 
 const workersFunc = async (array) => {
 	const arrayOfCalculations =  [];
-
-	for (let i = 6; i > 0; i--) {
+	for (let i = cpus().length; i > 0; i--) {
 		arrayOfCalculations.push(workerCalculation(array.splice(0, Math.ceil(array.length / i))));
 	}
 

@@ -6,13 +6,15 @@ const EventEmitter = require('events')
 
 const myEmitter = new EventEmitter();
 
-myEmitter.on('add', (a,b) => {
-	myEmitter.emit('result', a + b);
-})
+const functions = ['add', 'multiple'];
 
-myEmitter.on('multiply', (a,b) => {
-	myEmitter.emit('result', a * b);
-})
+for (const funcName of functions) {
+	const func = require(`./${funcName}.js`)
+
+	myEmitter.on(funcName, (a, b) => {
+		myEmitter.emit('result', func(a, b));
+	})
+}
 
 myEmitter.on('result', result => {
 	console.log('result:', result)
