@@ -1,0 +1,41 @@
+{
+  "name": "weather-cli",
+  "version": "1.0.0",
+  "description": "CLI for getting weather forecast",
+  "main": "index.js",
+  "bin": "./index.js",
+  "man": [
+    "./README.md"
+  ],
+  "funding": "",
+  "engines": {
+    "node": ">14"
+  },
+  "os": [
+    "!win32"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "weather"
+  ],
+  "author": "Aleksandr Petrov",
+  "license": "ISC",
+  "homepage": "https://sweatclub.ru",
+  "repository": {
+    "type": "git",
+    "url": "https://sweatclub.ru"
+  },
+  "bugs": {
+    "url": "https://sweatclub.ru",
+    "email": "sashafem@mail.ru"
+  },
+  "dependencies": {
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}
