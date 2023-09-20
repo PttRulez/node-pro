@@ -67,11 +67,11 @@ export class AuthController extends BaseController implements IAuthController {
 		if (!result) {
 			return next(new HTTPError(422, 'Такой пользователь уже существует'));
 		}
-		this.ok(res, { email: result.email, id: result.id });
+		this.ok(res, { email: result?.email, id: result?.id });
 	}
 
 	async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
-		const userInfo = await this.authService.getUserInfo(user);
+		const userInfo = await this.authService.getUserInfo(user.email);
 		this.ok(res, { email: userInfo?.email, id: userInfo?.id });
 	}
 

@@ -25,4 +25,8 @@ export class PrismaService {
 	async disconnect(): Promise<void> {
 		await this.client.$disconnect();
 	}
+
+	async cleanDb(): Promise<void> {
+		await this.client.userModel.deleteMany();
+	}
 }

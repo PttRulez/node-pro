@@ -1,16 +1,35 @@
+import { Role } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
 
+export interface IUserConstructor {
+	email: string;
+	name: string;
+	passwordHash?: string;
+	id?: number;
+	role?: Role;
+}
+
 export class User {
+	private readonly _email: string;
+	private readonly _name: string;
+	private readonly _role: Role;
+	private _id: number;
 	private _password: string;
 
-	constructor(
-		private readonly _email: string,
-		private readonly _name: string,
-		passwordHash?: string,
-	) {
-		if (passwordHash) {
-			this._password = passwordHash;
+	constructor(user: IUserConstructor) {
+		this._email = user.email;
+		this._name = user.name;
+		if (user.id) {
+			this._id = user.id;
 		}
+		this._role = user.role ?? Role.MANAGER;
+		if (user.passwordHash) {
+			this._password = user.passwordHash;
+		}
+	}
+
+	get id(): number {
+		return this._id;
 	}
 
 	get email(): string {
@@ -23,6 +42,10 @@ export class User {
 
 	get password(): string {
 		return this._password;
+	}
+
+	get role(): Role {
+		return this._role;
 	}
 
 	async setPassword(pass: string, salt: number): Promise<void> {

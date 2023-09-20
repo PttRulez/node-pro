@@ -1,4 +1,3 @@
-import { UserModel } from '@prisma/client';
 import { IAuthRepository } from './auth.repository.interface';
 import { User } from './user.entity';
 import { inject, injectable } from 'inversify';
@@ -9,13 +8,17 @@ import { PrismaService } from '../database/prisma.service';
 export class AuthRepository implements IAuthRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create({ email, password, name }: User): Promise<UserModel> {
-		return this.prismaService.client.userModel.create({
+	async create(name: string, email: string, password: string): Promise<User> {
+		const userFromBd = await this.prismaService.client.userModel.create({
 			data: { email, password, name },
 		});
+		return new User({ ...userFromBd, passwordHash: userFromBd.password });
 	}
 
-	async find(email: string): Promise<UserModel | null> {
-		return this.prismaService.client.userModel.findFirst({ where: { email } });
+	async find(email: string): Promise<User | null> {
+		const userFromBd = await this.prismaService.client.userModel.findFirst({ where: { email } });
+		if (!userFromBd) return null;
+
+		return new User({ ...userFromBd, passwordHash: userFromBd.password });
 	}
 }

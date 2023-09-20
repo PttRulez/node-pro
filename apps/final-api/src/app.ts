@@ -11,6 +11,8 @@ import { IExceptionFilter } from './errors/exception.filter.interface';
 import { AuthController } from './auth/auth.controller';
 import { PrismaService } from './database/prisma.service';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { AuthRegisterDto } from './auth/dto/auth-register.dto';
+import { AuthRepository } from './auth/auth.repository';
 
 @injectable()
 export class App {
@@ -24,6 +26,7 @@ export class App {
 		@inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
+		@inject(TYPES.AuthRepository) private authRepository: AuthRepository,
 	) {
 		this.app = express();
 		this.port = 8000;
@@ -31,7 +34,7 @@ export class App {
 
 	useMiddlewares(): void {
 		this.app.use(json());
-		const authMiddlewre = new AuthMiddleware(this.configService.get('SECRET'));
+		const authMiddlewre = new AuthMiddleware(this.configService.get('SECRET'), this.authRepository);
 		this.app.use(authMiddlewre.execute.bind(authMiddlewre));
 	}
 

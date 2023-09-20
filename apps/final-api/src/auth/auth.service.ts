@@ -6,24 +6,27 @@ import { User } from './user.entity';
 import { IConfigService } from '../config/config.service.interface';
 import { TYPES } from '../types';
 import { AuthRepository } from './auth.repository';
-import { UserModel } from '@prisma/client';
+import { Role } from '@prisma/client';
 
 @injectable()
 export class AuthService implements IAuthService {
+	private salt: number = Number(this.configService.get('SALT'));
+
 	constructor(
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.AuthRepository) private authRepository: AuthRepository,
 	) {}
 
-	async createUser({ email, name, password }: AuthRegisterDto): Promise<UserModel | null> {
-		const newUser = new User(email, name);
-		const salt = this.configService.get('SALT');
-		await newUser.setPassword(password, Number(salt));
+	async createUser({ name, email, password }: AuthRegisterDto): Promise<User | null> {
 		const existingUser = await this.authRepository.find(email);
 		if (existingUser) {
 			return null;
 		}
-		return this.authRepository.create(newUser);
+
+		const model = new User({ email, name, role: Role.MANAGER });
+		await model.setPassword(password, this.salt);
+
+		return this.authRepository.create(name, email, model.password);
 	}
 
 	async validateUser({ email, password }: AuthLoginDto): Promise<boolean> {
@@ -31,11 +34,10 @@ export class AuthService implements IAuthService {
 		if (!existingUser) {
 			return false;
 		}
-		const newUser = new User(existingUser.email, existingUser.name, existingUser.password);
-		return newUser.comparePassword(password, existingUser.password);
+		return existingUser.comparePassword(password, existingUser.password);
 	}
 
-	async getUserInfo(email: string): Promise<UserModel | null> {
+	async getUserInfo(email: string): Promise<User | null> {
 		return this.authRepository.find(email);
 	}
 }

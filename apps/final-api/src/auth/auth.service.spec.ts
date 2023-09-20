@@ -6,7 +6,9 @@ import { IAuthService } from './auth.service.interface';
 import { TYPES } from '../types';
 import { AuthService } from './auth.service';
 import { User } from './user.entity';
-import { UserModel } from '@prisma/client';
+import { Role, UserModel } from '@prisma/client';
+import { AuthRegisterDto } from './dto/auth-register.dto';
+import { AuthLoginDto } from './dto/auth-login.dto';
 
 const ConfigServiceMock: IConfigService = {
 	get: jest.fn(),
@@ -32,42 +34,42 @@ beforeAll(() => {
 	authService = container.get<IAuthService>(TYPES.AuthService);
 });
 
-let createdUser: UserModel | null;
+let createdUser: User | null;
+const userToCreate: AuthRegisterDto = {
+	email: 'aleks@mail.ru',
+	name: 'Aleksandr',
+	password: '123',
+};
+
+const wrongLogin: AuthLoginDto = {
+	email: 'vasya@mail.ru',
+	password: '543',
+};
 
 describe('AuthService', () => {
 	it('createUser', async () => {
 		configService.get = jest.fn().mockReturnValueOnce('1');
-		authRepository.create = jest.fn().mockImplementationOnce(
-			(user: User): UserModel => ({
-				name: user.name,
-				email: user.email,
-				password: user.password,
-				id: 1,
-			}),
-		);
-		createdUser = await authService.createUser({
-			email: 'aleks@mail.ru',
-			name: 'Aleksandr',
-			password: '123',
-		});
+		authRepository.create = jest
+			.fn()
+			.mockImplementationOnce((name: string, email: string, password: string): Promise<User> => {
+				return Promise.resolve(new User({ name, email, passwordHash: password, id: 1 }));
+			});
+		createdUser = await authService.createUser(userToCreate);
 		expect(createdUser?.id).toEqual(1);
-		expect(createdUser?.password).not.toEqual('123');
+		expect(createdUser?.password).not.toEqual(userToCreate.password);
 	});
 
 	it('validateUser correct', async () => {
 		authRepository.find = jest.fn().mockReturnValueOnce(createdUser);
-		const result = await authService.validateUser({
-			email: 'aleks@mail.ru',
-			password: '123',
-		});
+		const result = await authService.validateUser(userToCreate);
 		expect(result).toBeTruthy();
 	});
 
 	it('validateUser wrong password', async () => {
 		authRepository.find = jest.fn().mockReturnValueOnce(createdUser);
 		const result = await authService.validateUser({
-			email: 'aleks@mail.ru',
-			password: '1234',
+			email: userToCreate.email,
+			password: wrongLogin.password,
 		});
 		expect(result).toBeFalsy();
 	});
@@ -75,8 +77,8 @@ describe('AuthService', () => {
 	it('validateUser wrong email', async () => {
 		authRepository.find = jest.fn().mockReturnValueOnce(null);
 		const result = await authService.validateUser({
-			email: 'aleks2@mail.ru',
-			password: '123',
+			email: wrongLogin.email,
+			password: userToCreate.password,
 		});
 		expect(result).toBeFalsy();
 	});
