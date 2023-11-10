@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { IConfigService } from '@/config/config.service.interface';
 import { Container } from 'inversify';
-import { IAuthRepository } from './auth.repository.interface';
+import { IUsersRepository } from '../users/users.repository.interface';
 import { IAuthService } from './auth.service.interface';
 import { TYPES } from '../types';
 import { AuthService } from './auth.service';
@@ -14,23 +14,23 @@ const ConfigServiceMock: IConfigService = {
 	get: jest.fn(),
 };
 
-const AuthRepositoryMock: IAuthRepository = {
+const AuthRepositoryMock: IUsersRepository = {
 	find: jest.fn(),
 	create: jest.fn(),
 };
 
 const container = new Container();
 let configService: IConfigService;
-let authRepository: IAuthRepository;
+let authRepository: IUsersRepository;
 let authService: IAuthService;
 
 beforeAll(() => {
 	container.bind<IAuthService>(TYPES.AuthService).to(AuthService);
 	container.bind<IConfigService>(TYPES.ConfigService).toConstantValue(ConfigServiceMock);
-	container.bind<IAuthRepository>(TYPES.AuthRepository).toConstantValue(AuthRepositoryMock);
+	container.bind<IUsersRepository>(TYPES.UsersRepository).toConstantValue(AuthRepositoryMock);
 
 	configService = container.get<IConfigService>(TYPES.ConfigService);
-	authRepository = container.get<IAuthRepository>(TYPES.AuthRepository);
+	authRepository = container.get<IUsersRepository>(TYPES.UsersRepository);
 	authService = container.get<IAuthService>(TYPES.AuthService);
 });
 

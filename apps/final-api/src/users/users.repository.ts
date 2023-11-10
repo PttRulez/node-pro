@@ -1,11 +1,11 @@
-import { IAuthRepository } from './auth.repository.interface';
-import { User } from './user.entity';
+import { IUsersRepository } from './users.repository.interface';
+import { User } from '../auth/user.entity';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { PrismaService } from '../database/prisma.service';
 
 @injectable()
-export class AuthRepository implements IAuthRepository {
+export class UsersRepository implements IUsersRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create(name: string, email: string, password: string): Promise<User> {

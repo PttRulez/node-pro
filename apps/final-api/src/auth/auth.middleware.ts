@@ -2,14 +2,12 @@ import 'reflect-metadata';
 import { IMiddleware } from '@/common/middleware.interface';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-import { AuthRepository } from './auth.repository';
-import { inject } from 'inversify';
-import { TYPES } from '@/types';
+import { UsersRepository } from '../users/users.repository';
 
 export class AuthMiddleware implements IMiddleware {
 	constructor(
 		private secret: string,
-		private authRepository: AuthRepository,
+		private authRepository: UsersRepository,
 	) {}
 
 	execute(req: Request, res: Response, next: NextFunction): void {

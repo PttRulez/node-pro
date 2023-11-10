@@ -5,7 +5,7 @@ import { AuthRegisterDto } from './dto/auth-register.dto';
 import { User } from './user.entity';
 import { IConfigService } from '../config/config.service.interface';
 import { TYPES } from '../types';
-import { AuthRepository } from './auth.repository';
+import { UsersRepository } from '../users/users.repository';
 import { Role } from '@prisma/client';
 
 @injectable()
@@ -14,7 +14,7 @@ export class AuthService implements IAuthService {
 
 	constructor(
 		@inject(TYPES.ConfigService) private configService: IConfigService,
-		@inject(TYPES.AuthRepository) private authRepository: AuthRepository,
+		@inject(TYPES.UsersRepository) private authRepository: UsersRepository,
 	) {}
 
 	async createUser({ name, email, password }: AuthRegisterDto): Promise<User | null> {

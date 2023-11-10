@@ -24,3 +24,12 @@ enum Role {
   ADMIN
   MANAGER
 }
+
+model Good {
+  id      Int @id @default(autoincrement())
+  amount  Int
+  name    String @unique
+  price   Int
+
+  @@map("goods")
+}

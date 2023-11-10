@@ -10,9 +10,10 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { ValidateMiddleware } from '../common/validate.middleware';
 import { sign } from 'jsonwebtoken';
-import { IConfigService } from '@/config/config.service.interface';
+import { IConfigService } from '../config/config.service.interface';
 import { IAuthService } from './auth.service.interface';
 import { AuthGuard } from './auth.guard';
+import { AdminGuard } from './admin.guard';
 
 @injectable()
 export class AuthController extends BaseController implements IAuthController {
@@ -28,7 +29,7 @@ export class AuthController extends BaseController implements IAuthController {
 				path: '/register',
 				method: 'post',
 				func: this.register,
-				middlewares: [new ValidateMiddleware(AuthRegisterDto)],
+				middlewares: [new AdminGuard(), new ValidateMiddleware(AuthRegisterDto)],
 			},
 			{
 				path: '/login',
