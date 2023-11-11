@@ -83,8 +83,16 @@ export class GoodsController extends BaseController implements IGoodsController 
 		this.ok(res, true);
 	}
 
-	async getList(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const list = await this.goodsService.getList();
+	async getList(
+		req: Request<{}, {}, {}, { limit?: number; offset?: number }>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const params = {
+			offset: req.query.offset,
+			limit: req.query.limit,
+		};
+		const list = await this.goodsService.getList(params);
 		this.ok(res, list);
 	}
 

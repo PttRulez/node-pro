@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { IConfigService } from '@/config/config.service.interface';
 import { Container } from 'inversify';
-import { IUsersRepository } from '../users/users.repository.interface';
+import { IUsersRepository } from './users.repository.interface';
 import { IAuthService } from './auth.service.interface';
 import { TYPES } from '../types';
 import { AuthService } from './auth.service';

@@ -5,7 +5,7 @@ import { AuthRegisterDto } from './dto/auth-register.dto';
 import { User } from './user.entity';
 import { IConfigService } from '../config/config.service.interface';
 import { TYPES } from '../types';
-import { UsersRepository } from '../users/users.repository';
+import { UsersRepository } from './users.repository';
 import { Role } from '@prisma/client';
 
 @injectable()

@@ -10,6 +10,10 @@ export interface IGoodsController {
 	) => void;
 	create: (req: Request<{}, {}, CreateGoodDto>, res: Response, next: NextFunction) => void;
 	delete: (req: Request, res: Response, next: NextFunction) => void;
-	getList: (req: Request, res: Response, next: NextFunction) => void;
+	getList: (
+		req: Request<{}, {}, {}, { limit?: number; offset?: number }>,
+		res: Response,
+		next: NextFunction,
+	) => void;
 	update: (req: Request<{}, {}, UpdateGoodDto>, res: Response, next: NextFunction) => void;
 }

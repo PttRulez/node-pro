@@ -10,12 +10,8 @@ import { UpdateGoodDto } from './dto/update-good.dto';
 export class GoodsService implements IGoodsService {
 	constructor(@inject(TYPES.GoodsRepository) private goodsRepository: GoodsRepository) {}
 
-	async addAmount(amount: number, goodId: number): Promise<Good | null> {
-		const updatedGood = await this.goodsRepository.addAmount(amount, goodId);
-
-		if (!updatedGood) return null;
-
-		return updatedGood;
+	addAmount(amount: number, goodId: number): Promise<Good | null> {
+		return this.goodsRepository.addAmount(amount, goodId);
 	}
 
 	async create(dto: CreateGoodDto): Promise<Good | null> {
@@ -32,8 +28,8 @@ export class GoodsService implements IGoodsService {
 		return result;
 	}
 
-	getList(): Promise<Good[]> {
-		return this.goodsRepository.getList();
+	getList(params?: { limit?: number; offset?: number }): Promise<Good[]> {
+		return this.goodsRepository.getList(params);
 	}
 
 	update(dto: UpdateGoodDto): Promise<Good | null> {

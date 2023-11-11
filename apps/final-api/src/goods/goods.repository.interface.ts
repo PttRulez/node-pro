@@ -10,8 +10,8 @@ export interface IUpdateGood {
 export interface IGoodsRepository {
 	addAmount(amount: number, goodId: number): Promise<Good | null>;
 	create: (amount: number, name: string, price: number) => Promise<Good | null>;
-	delete: (id: number) => Promise<boolean>;
+	delete: (id: number) => Promise<Good | boolean>;
 	findByName: (name: string) => Promise<Good | null>;
-	getList: () => Promise<Good[]>;
+	getList: (params: { limit?: number; offset?: number }) => Promise<Good[]>;
 	update: (data: IUpdateGood) => Promise<Good | null>;
 }

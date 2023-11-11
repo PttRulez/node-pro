@@ -29,10 +29,10 @@ export class GoodsRepository implements IGoodsRepository {
 		return new Good(newGood);
 	}
 
-	async delete(goodId: number): Promise<boolean> {
+	async delete(goodId: number): Promise<Good | boolean> {
 		try {
-			await this.prismaService.client.good.delete({ where: { id: goodId } });
-			return true;
+			const deleted = await this.prismaService.client.good.delete({ where: { id: goodId } });
+			return new Good(deleted);
 		} catch (e) {
 			return false;
 		}
@@ -43,13 +43,14 @@ export class GoodsRepository implements IGoodsRepository {
 			where: { name },
 		});
 
-		if (!goodFromBd) return null;
-
-		return new Good(goodFromBd);
+		return goodFromBd && new Good(goodFromBd);
 	}
 
-	async getList(): Promise<Good[]> {
-		const dbres = await this.prismaService.client.good.findMany({});
+	async getList(params?: { limit?: number; offset?: number }): Promise<Good[]> {
+		const dbres = await this.prismaService.client.good.findMany({
+			take: params?.limit ?? 20,
+			skip: params?.offset ?? 0,
+		});
 		return dbres.map((i) => new Good(i));
 	}
 
