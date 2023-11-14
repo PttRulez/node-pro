@@ -25,7 +25,6 @@ export class SwaggerService {
 
 		try {
 			const result = await swaggerAutogen()(outputFile, routes, doc);
-			console.log('SWAGGER GENERATE result', result);
 		} catch (e) {
 			console.log('SWAGGER FAILED', e);
 		}

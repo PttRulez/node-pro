@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import dedent from 'dedent-js';
-import {getIcon} from "./api.service.js";
 
 const printError = (error) => {
 	console.log(chalk.bgRed(' ERROR ') + ' ' + error);

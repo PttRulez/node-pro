@@ -22,7 +22,7 @@ export class GoodsService implements IGoodsService {
 		return this.goodsRepository.create(dto.amount, dto.name, dto.price);
 	}
 
-	async delete(id: number): Promise<boolean> {
+	async delete(id: number): Promise<Good | boolean> {
 		const result = await this.goodsRepository.delete(id);
 
 		return result;
