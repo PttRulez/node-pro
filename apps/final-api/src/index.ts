@@ -21,6 +21,7 @@ import { GoodsController } from './goods/goods.controller';
 import { GoodsService } from './goods/goods.service';
 import { GoodsRepository } from './goods/goods.repository';
 import { SwaggerService } from './swagger/swagger.service';
+import { TelegramService } from './telegram/telegram.service';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -28,18 +29,19 @@ export interface IBootstrapReturn {
 }
 
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
-	bind<IExceptionFilter>(TYPES.ExceptionFilter).to(ExceptionFilter).inSingletonScope();
+	bind<App>(TYPES.Application).to(App).inSingletonScope();
 	bind<IAuthController>(TYPES.AuthController).to(AuthController).inSingletonScope();
 	bind<IAuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
+	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
+	bind<IExceptionFilter>(TYPES.ExceptionFilter).to(ExceptionFilter).inSingletonScope();
 	bind<IGoodsController>(TYPES.GoodsController).to(GoodsController).inSingletonScope();
 	bind<IGoodsService>(TYPES.GoodsService).to(GoodsService).inSingletonScope();
 	bind<IGoodsRepository>(TYPES.GoodsRepository).to(GoodsRepository).inSingletonScope();
+	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
-	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
-	bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
 	bind<SwaggerService>(TYPES.SwaggerService).to(SwaggerService).inSingletonScope();
-	bind<App>(TYPES.Application).to(App).inSingletonScope();
+	bind<TelegramService>(TYPES.TelegramService).to(TelegramService).inSingletonScope();
+	bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {
@@ -48,6 +50,8 @@ async function bootstrap(): Promise<IBootstrapReturn> {
 	const app = appContainer.get<App>(TYPES.Application);
 	const swagger = appContainer.get<SwaggerService>(TYPES.SwaggerService);
 	await app.init();
+	const telegramBot = appContainer.get<TelegramService>(TYPES.TelegramService);
+	telegramBot.start();
 	swagger.generateSwagger();
 	return { appContainer, app };
 }

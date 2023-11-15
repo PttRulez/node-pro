@@ -10,5 +10,6 @@ export const TYPES = {
 	ILogger: Symbol.for('ILogger'),
 	PrismaService: Symbol.for('PrismaService'),
 	SwaggerService: Symbol.for('SwaggerService'),
+	TelegramService: Symbol.for('TelegramService'),
 	UsersRepository: Symbol.for('UsersRepository'),
 };
