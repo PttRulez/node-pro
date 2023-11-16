@@ -48,11 +48,11 @@ async function bootstrap(): Promise<IBootstrapReturn> {
 	const appContainer = new Container();
 	appContainer.load(appBindings);
 	const app = appContainer.get<App>(TYPES.Application);
-	const swagger = appContainer.get<SwaggerService>(TYPES.SwaggerService);
+	// const swagger = appContainer.get<SwaggerService>(TYPES.SwaggerService);
 	await app.init();
 	const telegramBot = appContainer.get<TelegramService>(TYPES.TelegramService);
-	telegramBot.start();
-	swagger.generateSwagger();
+	await telegramBot.start();
+	// swagger.generateSwagger();
 	return { appContainer, app };
 }
 

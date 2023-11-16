@@ -13,3 +13,5 @@ export const TYPES = {
 	TelegramService: Symbol.for('TelegramService'),
 	UsersRepository: Symbol.for('UsersRepository'),
 };
+
+// export default TYPES;

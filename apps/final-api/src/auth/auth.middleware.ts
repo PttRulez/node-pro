@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { IMiddleware } from '@/common/middleware.interface';
+import { IMiddleware } from 'src/common/middleware.interface';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import { UsersRepository } from './users.repository';

@@ -1,4 +1,4 @@
-import { IMiddleware } from '@/common/middleware.interface';
+import { IMiddleware } from 'src/common/middleware.interface';
 import { Role } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 

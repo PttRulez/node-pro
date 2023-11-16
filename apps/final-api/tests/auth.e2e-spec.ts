@@ -1,9 +1,9 @@
-import { App } from '@/app';
+import { App } from 'src/app';
 import { boot } from '../src/index';
 import request from 'supertest';
-import { PrismaService } from '@/database/prisma.service';
-import { TYPES } from '../src/types';
-import { AuthRegisterDto } from '@/auth/dto/auth-register.dto';
+import { PrismaService } from 'src/database/prisma.service';
+import { TYPES } from 'src/types';
+import { AuthRegisterDto } from 'src/auth/dto/auth-register.dto';
 
 let application: App;
 let prisma: PrismaService;
@@ -18,7 +18,7 @@ const wrongUser = { email: 'vladimirwrong@wrong.ru', password: 'hhhadasd' };
 
 beforeAll(async () => {
 	const { app, appContainer } = await boot;
-	prisma = appContainer.get(TYPES.PrismaService);
+	prisma = appContainer.get<PrismaService>(TYPES.PrismaService);
 	application = app;
 	await prisma.cleanDb();
 });
@@ -65,6 +65,6 @@ describe('Auth e2e', () => {
 	});
 });
 
-afterAll(() => {
+afterAll(async () => {
 	application.close();
 });
