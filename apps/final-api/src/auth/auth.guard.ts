@@ -1,4 +1,4 @@
-import { IMiddleware } from '@/common/middleware.interface';
+import { IMiddleware } from 'src/common/middleware.interface';
 import { Request, Response, NextFunction } from 'express';
 
 export class AuthGuard implements IMiddleware {
