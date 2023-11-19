@@ -1,4 +1,4 @@
-import { IsDecimal, IsEmail, IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateGoodDto {
 	@IsOptional()
@@ -8,11 +8,14 @@ export class UpdateGoodDto {
 	@IsNumber()
 	id: number;
 
+	@IsString()
+	description: string;
+
 	@IsOptional()
-	@IsEmail({}, { message: 'Введите название товара' })
+	@IsString({ message: 'Введите название товара' })
 	name: string;
 
 	@IsOptional()
-	@IsDecimal()
+	@IsNumber()
 	price: number;
 }

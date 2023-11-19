@@ -10,6 +10,8 @@ import { HTTPError } from '../errors/http-error.class';
 import { GoodsService } from './goods.service';
 import { UpdateGoodDto } from './dto/update-good.dto';
 import { AdminGuard } from '../auth/admin.guard';
+import { AuthGuard } from '../auth/auth.guard';
+import { GoodErrors } from './errors';
 
 @injectable()
 export class GoodsController extends BaseController implements IGoodsController {
@@ -24,18 +26,19 @@ export class GoodsController extends BaseController implements IGoodsController 
 				path: '/add-amount',
 				method: 'post',
 				func: this.addAmount,
+				middlewares: [new AuthGuard()],
 			},
 			{
 				path: '/',
 				method: 'post',
 				func: this.create,
-				middlewares: [new AdminGuard(), new ValidateMiddleware(CreateGoodDto)],
+				middlewares: [new AuthGuard(), new AdminGuard(), new ValidateMiddleware(CreateGoodDto)],
 			},
 			{
 				path: '/:goodId',
 				method: 'delete',
 				func: this.delete,
-				middlewares: [new AdminGuard()],
+				middlewares: [new AuthGuard(), new AdminGuard()],
 			},
 			{
 				path: '/',
@@ -46,7 +49,7 @@ export class GoodsController extends BaseController implements IGoodsController 
 				path: '/',
 				method: 'patch',
 				func: this.update,
-				middlewares: [new AdminGuard()],
+				middlewares: [new AuthGuard(), new AdminGuard()],
 			},
 		]);
 	}
@@ -81,6 +84,15 @@ export class GoodsController extends BaseController implements IGoodsController 
 		if (!result) return next(new HTTPError(422, 'Товара с таким айди не существует'));
 
 		this.ok(res, true);
+	}
+
+	getErrorMessage(code: GoodErrors): string {
+		const map = {
+			[GoodErrors.GOOD_NOT_FOUND]: 'Товар не найден',
+			[GoodErrors.NOT_LEFT_IN_STOCK]: 'Товар распродан',
+		};
+
+		return map[code];
 	}
 
 	async getList(
