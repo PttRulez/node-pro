@@ -21,9 +21,31 @@ export class GoodsRepository implements IGoodsRepository {
 		}
 	}
 
-	async create(amount: number, name: string, price: number): Promise<Good> {
+	async buy(goods: Record<string, number>): Promise<boolean> {
+		const transactionsArr = Object.entries(goods).map(([id, amount]) => {
+			return this.prismaService.client.good.update({
+				where: { id: parseInt(id) },
+				data: { amount: { decrement: amount } },
+			});
+		});
+
+		try {
+			await this.prismaService.client.$transaction(transactionsArr);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	async create(
+		amount: number,
+		description: string,
+		imageUrl: string,
+		name: string,
+		price: number,
+	): Promise<Good> {
 		const newGood = await this.prismaService.client.good.create({
-			data: { amount, name, price },
+			data: { amount, description, imageUrl, name, price },
 		});
 
 		return new Good(newGood);
@@ -46,12 +68,36 @@ export class GoodsRepository implements IGoodsRepository {
 		return goodFromBd && new Good(goodFromBd);
 	}
 
-	async getList(params?: { limit?: number; offset?: number }): Promise<Good[]> {
-		const dbres = await this.prismaService.client.good.findMany({
-			take: params?.limit ?? 20,
-			skip: params?.offset ?? 0,
+	async findById(id: number): Promise<Good | null> {
+		const goodFromBd = await this.prismaService.client.good.findUnique({
+			where: { id },
 		});
-		return dbres.map((i) => new Good(i));
+
+		return goodFromBd && new Good(goodFromBd);
+	}
+
+	async getList(params: {
+		limit: number;
+		offset: number;
+	}): Promise<{ goods: Good[]; count: number }> {
+		const dbres = await this.prismaService.client.$transaction([
+			this.prismaService.client.good.count(),
+			this.prismaService.client.good.findMany({
+				take: params.limit,
+				skip: params.offset,
+				where: { amount: { gt: 0 } },
+			}),
+		]);
+
+		return { count: dbres[0], goods: dbres[1].map((i) => new Good(i)) };
+	}
+
+	async getListByIds(ids: Array<number>): Promise<Good[]> {
+		const dbRes = await this.prismaService.client.good.findMany({
+			where: { id: { in: ids } },
+		});
+
+		return dbRes.map((g) => new Good(g));
 	}
 
 	async update(data: IUpdateGood): Promise<Good | null> {

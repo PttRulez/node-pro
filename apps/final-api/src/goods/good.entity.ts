@@ -1,12 +1,16 @@
 export class Good {
-	id: number;
 	amount: number;
+	description: string;
+	id: number;
+	imageUrl: string | null;
 	name: string;
 	price: number;
 
 	constructor(good: Good) {
-		this.id = good.id;
 		this.amount = good.amount;
+		this.description = good.description;
+		this.id = good.id;
+		this.imageUrl = good.imageUrl;
 		this.name = good.name;
 		this.price = good.price;
 	}

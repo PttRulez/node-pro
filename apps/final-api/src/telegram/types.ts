@@ -1,22 +1,24 @@
+import { Good } from 'src/goods/good.entity';
 import { Context, Scenes } from 'telegraf';
 
 // сцена сессии
-export interface UserSessionScene extends Scenes.SceneSessionData {}
+export interface ShopSessionScene extends Scenes.SceneSessionData {
+	offset: number;
+}
 
 // сессия
-export interface UserSession extends Scenes.SceneSession<UserSessionScene> {
-	name: string;
+export interface ShopSession extends Scenes.SceneSession<ShopSessionScene> {
 	address: string;
+	cart: Record<string, number>;
+	currentPage: number;
+	goodsList: Array<Good>;
+	limit: number;
+	name: string;
+	offset: number;
 }
 
 export interface MyContext extends Context {
 	props: string;
-	session: UserSession;
-	scene: Scenes.SceneContextScene<MyContext, UserSessionScene>;
+	session: ShopSession;
+	scene: Scenes.SceneContextScene<MyContext, ShopSessionScene>;
 }
-
-// export interface MyContext extends Context {
-// 	props: string;
-// 	session: MySession;
-// 	scene: Scenes.SceneContextScene<MyContext, MySessionData>;
-// }
